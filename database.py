@@ -72,7 +72,7 @@ def get_user(username):
         }
     return None
 
-def update_password(username, new_password):
+def updatePassword(username, new_password):
     #update user's password in the database if they change it
     #Should return true if the user is found and false if it isn't
     conn = sqlite3.connect(DB_PATH)
@@ -89,4 +89,3 @@ def update_password(username, new_password):
     return rows_affected>0
 
         
-
