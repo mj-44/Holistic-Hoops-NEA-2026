@@ -34,7 +34,7 @@ class HomePage(tk.Frame):
             command = lambda: controller.show_page("LoginPage"),
             width = 20
         )
-        loginButton.pack(padu = 15)
+        loginButton.pack(pady = 15)
 
         #Register button
         registerButton = ButtonStyle(
