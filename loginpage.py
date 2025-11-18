@@ -1,6 +1,6 @@
 import tkinter as tk
 from colourscheme import(
-    StyledButton, StyledLabel, StyledEntry,
+    ButtonStyle, StyledLabel, StyledEntry,
     create_frame, show_message
 )
 from authenticator import verifyLogin
@@ -38,7 +38,7 @@ class LoginPage(tk.Frame):
         self.passwordEntry.bind("<Return>", lambda e: self.login())
 
         #Login Button
-        loginButton = StyledButton(
+        loginButton = ButtonStyle(
             main_frame,
             text = "Login",
             command = self.login,
@@ -47,7 +47,7 @@ class LoginPage(tk.Frame):
         loginButton.pack(pady=10)
 
         #Register Button
-        registerButton = StyledButton(
+        registerButton = ButtonStyle(
             main_frame,
             text = "Register",
             command = lambda: controller.show_page("RegisterPage"),
@@ -56,7 +56,7 @@ class LoginPage(tk.Frame):
         registerButton.pack(pady=10)
 
         #Forgot Password Button
-        forgotpasswordButton = StyledButton(
+        forgotpasswordButton = ButtonStyle(
             main_frame,
             text = "Forgot Password",
             command = lambda: controller.show_page("ForgotPasswordPage"),
@@ -98,5 +98,3 @@ class LoginPage(tk.Frame):
         else:
             self.message_label = show_message(self, message)
             self.message_label.place(relx = 0.5, rely = 0.85, anchor = "center")
-
-
