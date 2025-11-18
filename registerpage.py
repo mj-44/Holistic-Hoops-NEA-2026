@@ -150,5 +150,3 @@ class RegisterPage(tk.Frame):
                 "Username already exists"
             )
             self.message_label.place(relx = 0.5, rely = 0.92, anchor = "center")
-
-
