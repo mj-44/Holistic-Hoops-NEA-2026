@@ -2,7 +2,7 @@ import tkinter as tk
 from homepage import HomePage
 from loginpage import LoginPage
 from registerpage import RegisterPage
-from forgotpassword import ForgotPasswordPage
+from forgot_password import ForgotPasswordPage
 from database import initialise_database
 
 class BasketballApp:

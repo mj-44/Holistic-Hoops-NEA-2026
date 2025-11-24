@@ -117,8 +117,8 @@ class RegisterPage(tk.Frame):
             return
         
         #Hash Password and Security Answer
-        hashedPassword = hashedPassword(password)
-        hashedAnswer = hashedAnswer(securityAnswer)
+        hashedPassword = hashPassword(password)
+        hashedAnswer = hashPassword(securityAnswer)
 
         #Add the user to the database
         success = add_user(

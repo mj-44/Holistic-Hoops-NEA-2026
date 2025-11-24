@@ -33,12 +33,13 @@ def add_user(username, password, security_question, security_answer):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
+        params = (username, password, security_question, security_answer)
 
         #Insert new user
         cursor.execute("""
-            INSERT INTO users (username, passoword, security_question, security_answer)
-            VALUES (username, password, security_question, security_answer)
-            """, (username, password, security_question, security_answer))
+            INSERT INTO users
+            VALUES (NULL, ?, ?, ?, ?)
+            """, params)
         
         conn.commit()
         conn.close()
