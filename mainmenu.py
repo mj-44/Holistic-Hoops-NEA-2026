@@ -1,5 +1,5 @@
 import tkinter as tk
-from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR
+from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR, create_frame
 
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
@@ -23,8 +23,8 @@ class MainMenu(tk.Frame):
         #Button to training menu
         trainingButton = ButtonStyle(
             main_frame,
-            text = "Training 🏀"
-            command = lambda: controller.show_page("TrainingPage")
+            text = "Training 🏀",
+            command = lambda: controller.show_page("TrainingPage"),
             width = 15
         )
         trainingButton.pack(pady=10)
@@ -32,8 +32,8 @@ class MainMenu(tk.Frame):
         #Button to settings menu
         settingsButton = ButtonStyle(
             main_frame,
-            text = "Settings ⚙️"
-            command = lambda: controller.show_page("SettingsPage")
+            text = "Settings ⚙️",
+            command = lambda: controller.show_page("SettingsPage"),
             width = 15
         )
         trainingButton.pack(pady=10)
@@ -41,8 +41,8 @@ class MainMenu(tk.Frame):
         #Button to tracker menu
         trackerButton = ButtonStyle(
             main_frame,
-            text = "Tracker 📊"
-            command = lambda: controller.show_page("TrackingPage")
+            text = "Tracker 📊",
+            command = lambda: controller.show_page("TrackingPage"),
             width = 15
         )
         trainingButton.pack(pady=10)
@@ -50,8 +50,8 @@ class MainMenu(tk.Frame):
         #Button to comparison menu
         comparisonButton = ButtonStyle(
             main_frame,
-            text = "Comparison 𝐕𝐒"
-            command = lambda: controller.show_page("ComparisonPage")
+            text = "Comparison 𝐕𝐒",
+            command = lambda: controller.show_page("ComparisonPage"),
             width = 15
         )
         trainingButton.pack(pady=10)

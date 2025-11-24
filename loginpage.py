@@ -4,34 +4,35 @@ from colourscheme import(
     create_frame, show_message
 )
 from authenticator import verifyLogin
+from mainmenu import MainMenu
 
 class LoginPage(tk.Frame):
     #code for the login page so the user can enter credentials
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#000000")
-        self.controlerr = controller
+        self.controller = controller
         self.message_label = None #stores the result of the verification
         
         #container
-        main_frame = create_frame(self)
-        main_frame.place(relx=0.5, rely=0.5, anchor = "center")
+        self.main_frame = create_frame(self)
+        self.main_frame.place(relx=0.5, rely=0.5, anchor = "center")
 
         #Title
-        title = StyledLabel(main_frame, text = "Login", size = 26, bold = True)
+        title = StyledLabel(self.main_frame, text = "Login", size = 26, bold = True)
         title.pack(pady=(0,40))
 
         #Username
-        usernameLabel = StyledLabel(main_frame, text = "Username", size = 12)
+        usernameLabel = StyledLabel(self.main_frame, text = "Username", size = 12)
         usernameLabel.pack(pady=(10,5))
 
-        self.usernameEntry = StyledEntry(main_frame, width = 30)
+        self.usernameEntry = StyledEntry(self.main_frame, width = 30)
         self.usernameEntry.pack(pady=(0,20))
 
         #Password
-        passwordLabel = StyledLabel(main_frame, text = "Password", size = 12)
+        passwordLabel = StyledLabel(self.main_frame, text = "Password", size = 12)
         passwordLabel.pack(pady = (10,5))
 
-        self.passwordEntry = StyledEntry(main_frame, show = "*", width = 30)
+        self.passwordEntry = StyledEntry(self.main_frame, show = "*", width = 30)
         self.passwordEntry.pack(pady = (0,30))
 
         #Bind the enter key to allow the user to login
@@ -39,7 +40,7 @@ class LoginPage(tk.Frame):
 
         #Login Button
         loginButton = ButtonStyle(
-            main_frame,
+            self.main_frame,
             text = "Login",
             command = self.login,
             width = 20
@@ -48,7 +49,7 @@ class LoginPage(tk.Frame):
 
         #Register Button
         registerButton = ButtonStyle(
-            main_frame,
+            self.main_frame,
             text = "Register",
             command = lambda: controller.show_page("RegisterPage"),
             width = 20
@@ -57,7 +58,7 @@ class LoginPage(tk.Frame):
 
         #Forgot Password Button
         forgotpasswordButton = ButtonStyle(
-            main_frame,
+            self.main_frame,
             text = "Forgot Password",
             command = lambda: controller.show_page("ForgotPasswordPage"),
             width = 20
@@ -94,6 +95,8 @@ class LoginPage(tk.Frame):
             )
             self.message_label.place(relx = 0.5, rely = 0.85, anchor = "center")
             #This will redirect to the main menu once made
+            frame = MainMenu(self.main_frame)
+            frame.tkraise()
 
         else:
             self.message_label = show_message(self, message)
