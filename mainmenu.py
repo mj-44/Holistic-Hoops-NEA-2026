@@ -3,7 +3,7 @@ from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEX
 
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, BG_COLOUR)
+        super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
 
         #Contrainer frame to centralise content
@@ -24,7 +24,7 @@ class MainMenu(tk.Frame):
         trainingButton = ButtonStyle(
             main_frame,
             text = "Training 🏀",
-            command = lambda: controller.show_page("TrainingPage"),
+            command = lambda: controller.show_page("TrainingMenu"),
             width = 15
         )
         trainingButton.pack(pady=10)
@@ -36,7 +36,7 @@ class MainMenu(tk.Frame):
             command = lambda: controller.show_page("SettingsPage"),
             width = 15
         )
-        trainingButton.pack(pady=10)
+        settingsButton.pack(pady=10)
 
         #Button to tracker menu
         trackerButton = ButtonStyle(
@@ -45,7 +45,7 @@ class MainMenu(tk.Frame):
             command = lambda: controller.show_page("TrackingPage"),
             width = 15
         )
-        trainingButton.pack(pady=10)
+        trackerButton.pack(pady=10)
 
         #Button to comparison menu
         comparisonButton = ButtonStyle(
@@ -54,4 +54,4 @@ class MainMenu(tk.Frame):
             command = lambda: controller.show_page("ComparisonPage"),
             width = 15
         )
-        trainingButton.pack(pady=10)
+        comparisonButton.pack(pady=10)

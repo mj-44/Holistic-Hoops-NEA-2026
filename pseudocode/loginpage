@@ -1,0 +1,88 @@
+CLASS LoginPage INHERITS FROM Frame
+    
+    FUNCTION __init__(parent, controller)
+        CALL parent constructor WITH parent, background_color = "#000000"
+        SET this.controller TO controller
+        SET this.message_label TO NULL
+        
+        SET this.main_frame TO create_frame(this)
+        PLACE this.main_frame AT relative_x = 0.5, relative_y = 0.5, anchor = "center"
+
+        SET title TO NEW StyledLabel(this.main_frame, text = "Login", size = 26, bold = TRUE)
+        PACK title WITH vertical_padding = (0, 40)
+
+        SET usernameLabel TO NEW StyledLabel(this.main_frame, text = "Username", size = 12)
+        PACK usernameLabel WITH vertical_padding = (10, 5)
+
+        SET this.usernameEntry TO NEW StyledEntry(this.main_frame, width = 30)
+        PACK this.usernameEntry WITH vertical_padding = (0, 20)
+
+        SET passwordLabel TO NEW StyledLabel(this.main_frame, text = "Password", size = 12)
+        PACK passwordLabel WITH vertical_padding = (10, 5)
+
+        SET this.passwordEntry TO NEW StyledEntry(this.main_frame, show = "*", width = 30)
+        PACK this.passwordEntry WITH vertical_padding = (0, 30)
+
+        BIND this.passwordEntry "<Return>" TO LAMBDA FUNCTION(e): this.login()
+
+        SET loginButton TO NEW ButtonStyle(
+            this.main_frame,
+            text = "Login",
+            command = this.login,
+            width = 20
+        )
+        PACK loginButton WITH vertical_padding = 10
+
+        SET registerButton TO NEW ButtonStyle(
+            this.main_frame,
+            text = "Register",
+            command = LAMBDA FUNCTION: controller.show_page("RegisterPage"),
+            width = 20
+        )
+        PACK registerButton WITH vertical_padding = 10
+
+        SET forgotpasswordButton TO NEW ButtonStyle(
+            this.main_frame,
+            text = "Forgot Password",
+            command = LAMBDA FUNCTION: controller.show_page("ForgotPasswordPage"),
+            width = 20
+        )
+        PACK forgotpasswordButton WITH vertical_padding = 10
+    END FUNCTION
+
+    FUNCTION login()
+        IF this.message_label IS NOT NULL THEN
+            DESTROY this.message_label
+        END IF
+
+        SET username TO STRIP(GET this.usernameEntry)
+        SET password TO GET this.passwordEntry
+
+        IF username IS EMPTY OR password IS EMPTY THEN
+            SET this.message_label TO show_message(this, "Please Enter something for all fields")
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.85, anchor = "center"
+            RETURN
+        END IF
+        
+        SET is_valid, message, user_data TO verifyLogin(username, password)
+
+        IF is_valid THEN
+            DELETE this.usernameEntry FROM 0 TO END
+            DELETE this.passwordEntry FROM 0 TO END
+
+            SET this.message_label TO show_message(
+                this,
+                "Login Successful! The grind continues.",
+                is_error = FALSE
+            )
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.85, anchor = "center"
+        
+            CALL this.controller.show_page("MainMenu")
+
+        ELSE
+            SET this.message_label TO show_message(this, message)
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.85, anchor = "center"
+        END IF
+    END FUNCTION
+    
+END CLASS

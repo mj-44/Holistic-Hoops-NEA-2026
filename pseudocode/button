@@ -1,0 +1,29 @@
+CLASS ButtonStyle INHERITS FROM Button
+
+    FUNCTION new(parent, text, command, additional_parameters)
+       
+        SET parent_widget TO parent
+        SET button_text TO text
+        SET click_command TO command
+        SET background_color TO ACCENT_COLOUR
+        SET text_color TO TEXT_COLOUR
+        SET font TO ("Coda", 14, "bold")
+        SET border_style TO "flat"
+        SET mouse_cursor TO "hand2"
+        SET horizontal_padding TO 20
+        SET vertical_padding TO 10
+        PASS any additional_parameters to parent
+
+        BIND mouse_enter_event TO on_enter method
+        BIND mouse_leave_event TO on_leave method
+    END FUNCTION
+    
+    FUNCTION on_enter(event)
+        SET background_color TO HOVER_COLOUR
+    END FUNCTION
+    
+    FUNCTION on_leave(event)
+        SET background_color TO ACCENT_COLOUR
+    END FUNCTION
+    
+END CLASS

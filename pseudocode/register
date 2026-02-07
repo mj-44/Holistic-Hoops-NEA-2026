@@ -1,0 +1,135 @@
+CLASS RegisterPage INHERITS FROM Frame
+    
+    FUNCTION __init__(parent, controller)
+        CALL parent constructor WITH parent, background_color = "#000000"
+        SET this.controller TO controller
+        SET this.message_label TO NULL
+
+        SET main_frame TO create_frame(this)
+        PLACE main_frame AT relative_x = 0.5, relative_y = 0.5, anchor = "center"
+
+        SET title TO NEW StyledLabel(main_frame, text = "Create Account", size = 26, bold = TRUE)
+        PACK title WITH vertical_padding = (0, 30)
+
+        SET usernameLabel TO NEW StyledLabel(main_frame, text = "Username", size = 12)
+        PACK usernameLabel WITH vertical_padding = (10, 5)
+
+        SET this.usernameEntry TO NEW StyledEntry(main_frame, width = 30)
+        PACK this.usernameEntry WITH vertical_padding = (0, 15)
+
+        SET passwordLabel TO NEW StyledLabel(main_frame, text = "Password", size = 12)
+        PACK passwordLabel WITH vertical_padding = (10, 5)
+
+        SET this.passwordEntry TO NEW StyledEntry(main_frame, show = "*", width = 30)
+        PACK this.passwordEntry WITH vertical_padding = (0, 15)
+
+        SET confirmLabel TO NEW StyledLabel(main_frame, text = "Confirm Password", size = 12)
+        PACK confirmLabel WITH vertical_padding = (10, 5)
+
+        SET this.confirmEntry TO NEW StyledEntry(main_frame, show = "*", width = 30)
+        PACK this.confirmEntry WITH vertical_padding = (0, 15)
+
+        SET securityQuestionLabel TO NEW StyledLabel(
+            main_frame,
+            text = "Security Question",
+            size = 12
+        )
+        PACK securityQuestionLabel WITH vertical_padding = (10, 5)
+
+        SET this.securityQuestionEntry TO NEW StyledEntry(main_frame, width = 30)
+        PACK this.securityQuestionEntry WITH vertical_padding = (0, 15)
+
+        SET securityAnswerLabel TO NEW StyledLabel(
+            main_frame,
+            text = "Security Answer",
+            size = 12
+        )
+        PACK securityAnswerLabel WITH vertical_padding = (10, 5)
+
+        SET this.securityAnswerEntry TO NEW StyledEntry(main_frame, width = 30)
+        PACK this.securityAnswerEntry WITH vertical_padding = (0, 25)
+
+        SET registerButton TO NEW ButtonStyle(
+            main_frame,
+            text = "Register",
+            command = this.register,
+            width = 20
+        )
+        PACK registerButton WITH vertical_padding = 10
+
+        SET loginButton TO NEW ButtonStyle(
+            main_frame,
+            text = "Back to Login",
+            command = LAMBDA FUNCTION: controller.show_page("LoginPage"),
+            width = 20
+        )
+        PACK loginButton WITH vertical_padding = 10
+    END FUNCTION
+ 
+    FUNCTION register()
+        IF this.message_label IS NOT NULL THEN
+            DESTROY this.message_label
+        END IF
+
+        SET username TO STRIP(GET this.usernameEntry)
+        SET password TO GET this.passwordEntry
+        SET confirmPassword TO GET this.confirmEntry
+        SET securityQuestion TO STRIP(GET this.securityQuestionEntry)
+        SET securityAnswer TO STRIP(GET this.securityAnswerEntry)
+
+        IF NOT ALL([username, password, confirmPassword, securityQuestion, securityAnswer]) THEN
+            SET this.message_label TO show_message(this, "Please fill in all fields")
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.92, anchor = "center"
+            RETURN
+        END IF
+        
+        SET isValid, errorMessage TO validateUsername(username)
+        IF NOT isValid THEN
+            SET this.message_label TO show_message(this, errorMessage)
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.92, anchor = "center"
+            RETURN
+        END IF
+        
+        SET isValid, errorMessage TO validatePassword(password)
+        IF NOT isValid THEN
+            SET this.message_label TO show_message(this, errorMessage)
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.92, anchor = "center"
+            RETURN
+        END IF
+        
+        SET hashedPassword TO hashPassword(password)
+        SET hashedAnswer TO hashPassword(securityAnswer)
+
+        SET success TO add_user(
+            username,
+            hashedPassword,
+            securityQuestion,
+            hashedAnswer
+        )
+
+        IF success THEN
+            DELETE this.usernameEntry FROM 0 TO END
+            DELETE this.passwordEntry FROM 0 TO END
+            DELETE this.confirmEntry FROM 0 TO END
+            DELETE this.securityQuestionEntry FROM 0 TO END
+            DELETE this.securityAnswerEntry FROM 0 TO END
+
+            SET this.message_label TO show_message(
+                this,
+                "Successfully Created Account! The grind begins today.",
+                is_error = FALSE
+            )
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.92, anchor = "center"
+            
+            CALL this.controller.show_page("MainMenu")
+
+        ELSE
+            SET this.message_label TO show_message(
+                this,
+                "Username already exists"
+            )
+            PLACE this.message_label AT relative_x = 0.5, relative_y = 0.92, anchor = "center"
+        END IF
+    END FUNCTION
+    
+END CLASS

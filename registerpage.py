@@ -143,6 +143,7 @@ class RegisterPage(tk.Frame):
             )
             self.message_label.place(relx = 0.5, rely = 0.92, anchor = "center")
             #here, the page should be redirected to the main menu after registering
+            self.controller.show_page("MainMenu")
 
         else:
             self.message_label = show_message(

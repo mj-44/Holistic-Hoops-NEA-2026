@@ -94,9 +94,8 @@ class LoginPage(tk.Frame):
                 is_error=False
             )
             self.message_label.place(relx = 0.5, rely = 0.85, anchor = "center")
-            #This will redirect to the main menu once made
-            frame = MainMenu(self.main_frame)
-            frame.tkraise()
+        
+            self.controller.show_page("MainMenu")
 
         else:
             self.message_label = show_message(self, message)

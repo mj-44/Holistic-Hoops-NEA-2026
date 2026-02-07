@@ -3,6 +3,21 @@ from homepage import HomePage
 from loginpage import LoginPage
 from registerpage import RegisterPage
 from forgot_password import ForgotPasswordPage
+from mainmenu import MainMenu
+from trainingmenu import TrainingMenu
+from shootingmenu import ShootingMenu
+from dribblingmenu import DribblingMenu
+from footworkmenu import FootworkMenu
+from finishingmenu import FinishingMenu
+from dribblepullupdrill import DribblePullUpDrill
+from alleydrill import AlleyDrill
+from aroundtheworld import AroundTheWorld
+from backpedalfinishing import BackPedalFinishing
+from backpedalfinishingpf import BackPedalFinishingPF
+from conetouchfinishing import ConeTouchFinishing
+from fresnoattack import FresnoAttack
+from offbalancepullups import OffBalancePullUps
+from rangerumble import RangeRumble
 from database import initialise_database
 
 class BasketballApp:
@@ -28,7 +43,7 @@ class BasketballApp:
         #create dictionary to store pages
         self.pages = {}
 
-        for PageClass in (HomePage, LoginPage, RegisterPage, ForgotPasswordPage):
+        for PageClass in (HomePage, LoginPage, RegisterPage, ForgotPasswordPage, MainMenu, TrainingMenu, ShootingMenu, DribblingMenu, FootworkMenu, FinishingMenu, DribblePullUpDrill, AlleyDrill, AroundTheWorld, BackPedalFinishing, BackPedalFinishingPF, ConeTouchFinishing, FresnoAttack, OffBalancePullUps, RangeRumble):
             page_name = PageClass.__name__
             page = PageClass(parent = self.container, controller = self)
             self.pages[page_name] = page
