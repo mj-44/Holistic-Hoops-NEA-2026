@@ -18,6 +18,12 @@ from conetouchfinishing import ConeTouchFinishing
 from fresnoattack import FresnoAttack
 from offbalancepullups import OffBalancePullUps
 from rangerumble import RangeRumble
+from fullcourtweave import FullcourtWeaveDrill
+from spinmove import SpinMoveDrill
+from settingsmenu import SettingsMenu
+from drivinglay import DrivingLayDrill
+from comparisonmenu import ComparisonMenu
+from trackermenu import TrackerMenu
 from database import initialise_database
 
 class BasketballApp:
@@ -43,7 +49,7 @@ class BasketballApp:
         #create dictionary to store pages
         self.pages = {}
 
-        for PageClass in (HomePage, LoginPage, RegisterPage, ForgotPasswordPage, MainMenu, TrainingMenu, ShootingMenu, DribblingMenu, FootworkMenu, FinishingMenu, DribblePullUpDrill, AlleyDrill, AroundTheWorld, BackPedalFinishing, BackPedalFinishingPF, ConeTouchFinishing, FresnoAttack, OffBalancePullUps, RangeRumble):
+        for PageClass in (HomePage, LoginPage, RegisterPage, ForgotPasswordPage, MainMenu, TrainingMenu, ShootingMenu, DribblingMenu, FootworkMenu, FinishingMenu, DribblePullUpDrill, AlleyDrill, AroundTheWorld, BackPedalFinishing, BackPedalFinishingPF, ConeTouchFinishing, FresnoAttack, OffBalancePullUps, RangeRumble, FullcourtWeaveDrill, SpinMoveDrill, DrivingLayDrill, SettingsMenu, ComparisonMenu, TrackerMenu):
             page_name = PageClass.__name__
             page = PageClass(parent = self.container, controller = self)
             self.pages[page_name] = page
@@ -51,6 +57,21 @@ class BasketballApp:
 
         #Start by showing the home page
         self.show_page("HomePage")
+
+    def get_current_user(self):
+        return self.current_user
+
+    def set_current_user(self, user_data):
+        self.current_user = user_data
+        self.pages["ComparisonMenu"].set_current_user(user_data["username"])
+        self.pages["TrackerMenu"].set_current_user(user_data["username"])
+
+    def show_page(self, page_name):
+        page = self.pages[page_name]
+        page.tkraise()
+
+    def run(self):
+        self.root.mainloop()
 
     def show_page(self, page_name):
         #Brings a page to the front and can be called on by buttons to navigate pages

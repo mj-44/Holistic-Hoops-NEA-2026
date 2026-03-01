@@ -4,8 +4,9 @@ from PIL import Image, ImageTk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, create_frame
 from thememanager import theme_manager
 
-
-class AlleyDrill(tk.Frame):
+class FullcourtWeaveDrill(tk.Frame):
+    #Dribble Pull-Up Drill page class
+    
     def __init__(self, parent, controller):
         super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
@@ -14,42 +15,40 @@ class AlleyDrill(tk.Frame):
         #Initialise variables for stat tracking
         self.makes = 0
         self.misses = 0
-        self.total_shots = 25
+        self.total_shots = 25 
         
         #Container frame to centralise content
         main_frame = create_frame(self)
         main_frame.place(relx = 0.5, rely = 0.5, anchor = "center")
 
-        #Creating the title for the alley drill
+        #Creating the title for the Full Court Weave page
         title = StyledLabel(
             main_frame,
-            text = "Alley Drill",
+            text = "Full Court Weave Drill",
             size = 21,
             bold = True
+            
         )
-        title.pack(pady=(0,20))
+        title.pack(pady=(20,10))
 
-        #Subtitle for instructions
         subtitle = StyledLabel(
             main_frame,
-            text = "Drill Focused on getting by a defender in limited space!",
+            text = "Drill Focused on handling the ball when going coast to coast",
             size = 14,
             bold = False
         )
         subtitle.pack(pady=(0,20))
 
         #Load the image
-        drillImage = Image.open("assets/alley_drill.png")
+        drillImage = Image.open("assets/fullcourt_weave.png")
 
         #Resize the image to fit within the app window while maintaining aspect ratio
         drillImage = drillImage.resize((500, 300), Image.Resampling.LANCZOS)
 
         #Convert the image to a format Tkinter can use
         self.drillPhoto = ImageTk.PhotoImage(drillImage)
-
-        #Display the image
-        imageLabel = tk.Label(main_frame, image=self.drillPhoto, bg=BG_COLOUR)
-        imageLabel.pack(pady=(0,20))
+        imageLabel = tk.Label(main_frame, image = self.drillPhoto, bg = BG_COLOUR)
+        imageLabel.pack(pady=(20))
 
         #Displaying the instructions for the drill
         instructionsLabel = StyledLabel(
@@ -62,10 +61,11 @@ class AlleyDrill(tk.Frame):
 
         #Give the instructions step by step
         steps = [
-            "1. Attacker starts from half-court with the ball with defender positioned in front.",
-            "2. Red cross defends the blue player between the “alleyway” of cones",
-            "3. Blue player has 10 seconds to get to the rim and try to score",
-            "4. Repeat 25 times and get a score out of 25 (stops count as a miss)",
+            "1. Start from the baseline.",
+            "2. Dribble towards the sideline against a defender.",
+            "3. Follow a zigzag pattern up the court, weaving back and forth while keeping off the defender.",
+            "4. Drive to the basket for a layup or finish at the rim once you reach the other end.",
+            "5. Repeat 25 times and record a score out of 25."
         ]
 
         for step in steps:
@@ -124,7 +124,7 @@ class AlleyDrill(tk.Frame):
         #Miss Button
         self.missButton = ButtonStyle(
             buttonContainer,
-            text = "MISS/STOP ✘",
+            text = "MISS ✘",
             command = self.record_miss,
             width = 12
         )
@@ -134,11 +134,11 @@ class AlleyDrill(tk.Frame):
         backButton = ButtonStyle(
             main_frame,
             text = "← Back",
-            command = lambda: controller.show_page("FinishingMenu"),
+            command = lambda: controller.show_page("DribblingMenu"),
             width = 20
         )
         backButton.pack(pady=10)
-        
+
         #Reset button to reset the drill stats
         resetButton = ButtonStyle(
             main_frame,
@@ -147,18 +147,19 @@ class AlleyDrill(tk.Frame):
             width = 12
         )
         resetButton.pack(side = "left", pady=10)
+
         theme_manager.register(self.apply_theme)
 
     def apply_theme(self):
-            c = theme_manager.colours
-            self.configure(bg=c["bg"])
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])
 
     def record_make(self):
         #Reording a made shot
         if self.makes + self.misses >= self.total_shots:
-            messagebox.showinfo("Drill Complete", "You have completed all 25 1v1s!")
+            messagebox.showinfo("Drill Complete", "You have completed all 25 shots!")
             return
-
+        
         self.makes += 1
         self.update_display()
 
@@ -168,7 +169,7 @@ class AlleyDrill(tk.Frame):
     def record_miss(self):
         #Recording a missed shot
         if self.makes + self.misses >= self.total_shots:
-            messagebox.showinfo("Drill Complete", "You have completed all 25 1v1s!")
+            messagebox.showinfo("Drill Complete", "You have completed all 25 shots!")
             return
         
         self.misses += 1
@@ -188,7 +189,7 @@ class AlleyDrill(tk.Frame):
             self.percentageLabel.config(text = f"Shooting %: {percentage: .1f}%")
         else:
             self.percentageLabel.config(text = "Shooting %: 0.0%")
-
+        
     def drill_complete(self):
         #Notify user that the drill is complete
         percentage = (self.makes / self.total_shots) * 100
@@ -218,4 +219,3 @@ class AlleyDrill(tk.Frame):
         #Can be used to load saved progress
         super().tkraise(aboveThis)
         self.reset_drill()
-

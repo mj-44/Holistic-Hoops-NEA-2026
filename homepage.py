@@ -1,11 +1,13 @@
 import tkinter as tk
 from colourscheme import ButtonStyle, StyledLabel, create_frame
+from thememanager import theme_manager
 
 class HomePage(tk.Frame):
     #Home page to welcome the user to the application with buttons redirecting to login and registration page
     def __init__(self, parent, controller):
         super().__init__(parent, bg = "#000000")
         self.controller = controller
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Container frame to centre content
         main_frame = create_frame(self)
@@ -44,3 +46,9 @@ class HomePage(tk.Frame):
             width = 20
         )
         registerButton.pack(pady=15)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])

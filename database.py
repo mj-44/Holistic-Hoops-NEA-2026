@@ -9,40 +9,62 @@ DB_PATH = os.path.join("data", "users.db")
 def initialise_database():
     #Creates directory if it doesn't already exist
     os.makedirs("data", exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
 
-    #Create user table with its fields
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            security_question TEXT NOT NULL,
-            security_answer TEXT NOT NULL
-        )
-    """)
+        #Create user table with its fields
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                security_question TEXT NOT NULL,
+                security_answer TEXT NOT NULL
+            )
+        """)
 
-    #Save and close connection
-    conn.commit()
-    conn.close()
+        #Create drill scores table - stores every attempt for every drill
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS drill_scores(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                drill_name TEXT NOT NULL,
+                makes INTEGER NOT NULL,
+                total_shots INTEGER NOT NULL,
+                percentage REAL NOT NULL,
+                date_completed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+
+        #Create high scores table - one row per user per drill, updated when beaten
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS high_scores(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                drill_name TEXT NOT NULL,
+                makes INTEGER NOT NULL,
+                total_shots INTEGER NOT NULL,
+                percentage REAL NOT NULL,
+                date_achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, drill_name),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+
+        conn.commit()
 
 #adds a user to the database if the username is unique, otherwise it rejects the input
 def add_user(username, password, security_question, security_answer):
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-
-        params = (username, password, security_question, security_answer)
-
-        #Insert new user
-        cursor.execute("""
-            INSERT INTO users
-            VALUES (NULL, ?, ?, ?, ?)
-            """, params)
-        
-        conn.commit()
-        conn.close()
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            params = (username, password, security_question, security_answer)
+            cursor.execute("""
+                INSERT INTO users
+                VALUES (NULL, ?, ?, ?, ?)
+                """, params)
+            conn.commit()
         return True
     except sqlite3.IntegrityError:
         #This path of code executes if username already exists
@@ -50,21 +72,16 @@ def add_user(username, password, security_question, security_answer):
     
 def get_user(username):
     #Retrieves user from database depending on the username
-    #If successful, should return a dictionary, if not should return None
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT id, username, password, security_question, security_answer
-        FROM users WHERE username = ?
-        """, (username,))
-    
-    result = cursor.fetchone()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id, username, password, security_question, security_answer
+            FROM users WHERE username = ?
+            """, (username,))
+        result = cursor.fetchone()
 
     if result:
-        #Convert tuple tp dictionary for easier access
-        return{
+        return {
             "id": result[0],
             "username": result[1],
             "password": result[2],
@@ -75,18 +92,96 @@ def get_user(username):
 
 def updatePassword(username, new_password):
     #update user's password in the database if they change it
-    #Should return true if the user is found and false if it isn't
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE users SET password = ? WHERE username = ?
+        """, (new_password, username))
+        rows_affected = cursor.rowcount
+        conn.commit()
+    return rows_affected > 0
 
-    cursor.execute("""
-        UPDATE users SET password = ? WHERE username = ?
-    """, (new_password, username))
+def save_drill_score(user_id, drill_name, makes, total_shots):
+    #Save a completed drill attempt to drill_scores
+    #Also update high_scores if this is a new personal best
+    percentage = round((makes / total_shots) * 100, 1)
 
-    rows_affected = cursor.rowcount
-    conn.commit()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
 
-    return rows_affected>0
+        #Always insert into drill_scores (full history)
+        cursor.execute("""
+            INSERT INTO drill_scores (user_id, drill_name, makes, total_shots, percentage)
+            VALUES (?, ?, ?, ?, ?)
+        """, (user_id, drill_name, makes, total_shots, percentage))
 
-        
+        #Check if a high score already exists for this user + drill
+        cursor.execute("""
+            SELECT makes FROM high_scores
+            WHERE user_id = ? AND drill_name = ?
+        """, (user_id, drill_name))
+        existing = cursor.fetchone()
+
+        if existing is None:
+            #No existing high score — insert one
+            cursor.execute("""
+                INSERT INTO high_scores (user_id, drill_name, makes, total_shots, percentage)
+                VALUES (?, ?, ?, ?, ?)
+            """, (user_id, drill_name, makes, total_shots, percentage))
+        elif makes > existing[0]:
+            #New personal best — update the record
+            cursor.execute("""
+                UPDATE high_scores
+                SET makes = ?, total_shots = ?, percentage = ?, date_achieved = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND drill_name = ?
+            """, (makes, total_shots, percentage, user_id, drill_name))
+
+        conn.commit()
+
+def get_user_high_scores(user_id):
+    #Returns all high scores for a given user as a dictionary keyed by drill name
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT drill_name, makes, total_shots, percentage
+            FROM high_scores WHERE user_id = ?
+        """, (user_id,))
+        results = cursor.fetchall()
+
+    return {
+        row[0]: {
+            "makes": row[1],
+            "total_shots": row[2],
+            "percentage": row[3]
+        }
+        for row in results
+    }
+
+def get_high_scores_by_username(username):
+    #Returns high scores for a user looked up by username (used for comparison page)
+    user = get_user(username)
+    if not user:
+        return None
+    return get_user_high_scores(user["id"])
+
+def get_all_drill_scores(user_id):
+    #Returns the full score history for a given user
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT drill_name, makes, total_shots, percentage, date_completed
+            FROM drill_scores WHERE user_id = ?
+            ORDER BY date_completed DESC
+        """, (user_id,))
+        results = cursor.fetchall()
+
+    return [
+        {
+            "drill_name": row[0],
+            "makes": row[1],
+            "total_shots": row[2],
+            "percentage": row[3],
+            "date_completed": row[4]
+        }
+        for row in results
+    ]

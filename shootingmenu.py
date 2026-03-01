@@ -1,10 +1,12 @@
 import tkinter as tk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR, create_frame
+from thememanager import theme_manager
 
 class ShootingMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Container frame to centralise content
         main_frame = create_frame(self)
@@ -55,3 +57,9 @@ class ShootingMenu(tk.Frame):
             width = 20
         )
         backButton.pack(pady=10)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])

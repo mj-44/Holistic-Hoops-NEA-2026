@@ -1,10 +1,12 @@
 import tkinter as tk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR, create_frame
+from thememanager import theme_manager
 
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Contrainer frame to centralise content
         main_frame = create_frame(self)
@@ -33,7 +35,7 @@ class MainMenu(tk.Frame):
         settingsButton = ButtonStyle(
             main_frame,
             text = "Settings ⚙️",
-            command = lambda: controller.show_page("SettingsPage"),
+            command = lambda: controller.show_page("SettingsMenu"),
             width = 15
         )
         settingsButton.pack(pady=10)
@@ -42,7 +44,7 @@ class MainMenu(tk.Frame):
         trackerButton = ButtonStyle(
             main_frame,
             text = "Tracker 📊",
-            command = lambda: controller.show_page("TrackingPage"),
+            command = lambda: controller.show_page("TrackerMenu"),
             width = 15
         )
         trackerButton.pack(pady=10)
@@ -51,7 +53,13 @@ class MainMenu(tk.Frame):
         comparisonButton = ButtonStyle(
             main_frame,
             text = "Comparison 𝐕𝐒",
-            command = lambda: controller.show_page("ComparisonPage"),
+            command = lambda: controller.show_page("ComparisonMenu"),
             width = 15
         )
         comparisonButton.pack(pady=10)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])

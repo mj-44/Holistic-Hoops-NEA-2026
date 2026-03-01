@@ -1,10 +1,12 @@
 import tkinter as tk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR, create_frame
+from thememanager import theme_manager
 
 class TrainingMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Container frame to centralise content
         main_frame = create_frame(self)
@@ -20,7 +22,7 @@ class TrainingMenu(tk.Frame):
         )
         title.pack(pady=(0,50))
 
-        #Button to start a new training session
+        #Button to navigate to the shooting menu
         shootingButton = ButtonStyle(
             main_frame,
             text = "Shooting 🎯",
@@ -29,6 +31,7 @@ class TrainingMenu(tk.Frame):
         )
         shootingButton.pack(pady=10)
 
+        #Button to navigate to the dribbling menu
         dribblingButton = ButtonStyle(
             main_frame,
             text = "Dribbling 🏀",
@@ -37,6 +40,7 @@ class TrainingMenu(tk.Frame):
         )
         dribblingButton.pack(pady=10)
 
+        #Button to navigate to the footwork menu
         footworkButton = ButtonStyle(
             main_frame,
             text = "Footwork 👟",
@@ -45,6 +49,7 @@ class TrainingMenu(tk.Frame):
         )
         footworkButton.pack(pady=10)
 
+        #Button to navigate to the finishing menu
         finishingButton = ButtonStyle(
             main_frame,
             text = "Finishing 🏆",
@@ -53,6 +58,7 @@ class TrainingMenu(tk.Frame):
         )
         finishingButton.pack(pady=10)
         
+        #Button to return to the main menu when needed
         backButton = ButtonStyle(
             main_frame,
             text = "Back to Main Menu",
@@ -60,3 +66,9 @@ class TrainingMenu(tk.Frame):
             width = 20
         )
         backButton.pack(pady=30)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])

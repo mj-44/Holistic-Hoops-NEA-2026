@@ -1,6 +1,7 @@
 #setting the colours for the application and button settings
 import tkinter as tk
 from tkinter import font
+from thememanager import theme_manager
 
 #colour scheme
 BG_COLOUR = "#000000"
@@ -9,52 +10,56 @@ TEXT_COLOUR = "#FFFFFF"
 HOVER_COLOUR = "#FFA500" #changes shade of orange when hovering over a button
 
 class ButtonStyle(tk.Button):
-    #Creating app colour scheme with the hover effects
-    def __init__(self, parent, text, command, **kwargs): #keyword arguments to accept any number of keyword arguments
+    def __init__(self, parent, text, command, **kwargs):
         super().__init__(
             parent,
-            text = text,
-            command = command,
-            bg = ACCENT_COLOUR,
-            fg = TEXT_COLOUR,
-            font = ("Coda", 14, "bold"),
-            relief = "flat",
-            cursor = "hand2",
-            padx = 20,
-            pady = 10,
-            **kwargs 
-    )
-        
-        #hover effects
+            text=text,
+            command=command,
+            bg=theme_manager.colours["accent"],
+            fg=theme_manager.colours["text"],
+            font=("Coda", 14, "bold"),
+            relief="flat",
+            cursor="hand2",
+            padx=20,
+            pady=10,
+            **kwargs
+        )
+        theme_manager.register(lambda: self.configure(
+            bg=theme_manager.colours["accent"],
+            fg=theme_manager.colours["text"]
+        ))
         self.bind("<Enter>", self.on_enter)
         self.bind("<Leave>", self.on_leave)
 
     def on_enter(self, e):
-        #Change colour when mouse hovers over the button
-        self["bg"] = HOVER_COLOUR
+        self["bg"] = theme_manager.colours["hover"]
 
     def on_leave(self, e):
-        #Return to normal colour when mouse is no longer hovering
-        self["bg"] = ACCENT_COLOUR
+        self["bg"] = theme_manager.colours["accent"]
 
 class StyledEntry(tk.Entry):
-    #Custom text entry matching app colour scheme
-    def __init__(self, parent, placeholder="", show = "", **kwargs):
+    def __init__(self, parent, placeholder="", show="", **kwargs):
         super().__init__(
             parent,
-            bg="#1a1a1a",
-            fg=TEXT_COLOUR,
+            bg=theme_manager.colours["entry_bg"],
+            fg=theme_manager.colours["text"],
             font=("Coda", 12),
-            insertbackground=TEXT_COLOUR,
+            insertbackground=theme_manager.colours["text"],
             relief="solid",
             bd=2,
             highlightthickness=2,
-            highlightcolor=ACCENT_COLOUR,
-            highlightbackground="#333333",
+            highlightcolor=theme_manager.colours["accent"],
+            highlightbackground=theme_manager.colours["entry_border"],
             show=show,
             **kwargs
         )
-        
+        theme_manager.register(lambda: self.configure(
+            bg=theme_manager.colours["entry_bg"],
+            fg=theme_manager.colours["text"],
+            insertbackground=theme_manager.colours["text"],
+            highlightcolor=theme_manager.colours["accent"],
+            highlightbackground=theme_manager.colours["entry_border"],
+        ))
 
         self.placeholder = placeholder
         self.placeholder_active = False
@@ -95,15 +100,20 @@ class StyledLabel(tk.Label):
         super().__init__(
             parent,
             text=text,
-            bg=BG_COLOUR,
-            fg=TEXT_COLOUR,
+            bg=theme_manager.colours["bg"],
+            fg=theme_manager.colours["text"],
             font=font_tuple,
             **kwargs
         )
+        theme_manager.register(lambda: self.configure(
+            bg=theme_manager.colours["bg"],
+            fg=theme_manager.colours["text"]
+        ))
 
 def create_frame(parent):
-    #Create a styled frame
-    return tk.Frame(parent, bg = BG_COLOUR)
+    frame = tk.Frame(parent, bg=theme_manager.colours["bg"])
+    theme_manager.register(lambda: frame.configure(bg=theme_manager.colours["bg"]))
+    return frame
 
 def show_message(parent, message, is_error = True):
     #Displays message and returns it so it can be destroyed later

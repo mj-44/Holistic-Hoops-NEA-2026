@@ -5,6 +5,7 @@ from colourscheme import(
 )
 from authenticator import verifyLogin
 from mainmenu import MainMenu
+from thememanager import theme_manager
 
 class LoginPage(tk.Frame):
     #code for the login page so the user can enter credentials
@@ -12,6 +13,7 @@ class LoginPage(tk.Frame):
         super().__init__(parent, bg="#000000")
         self.controller = controller
         self.message_label = None #stores the result of the verification
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
         
         #container
         self.main_frame = create_frame(self)
@@ -65,6 +67,12 @@ class LoginPage(tk.Frame):
         )
         forgotpasswordButton.pack(pady = 10)
 
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])
+
     def login(self):
         #Handle login button click
         if self.message_label:
@@ -95,6 +103,7 @@ class LoginPage(tk.Frame):
             )
             self.message_label.place(relx = 0.5, rely = 0.85, anchor = "center")
         
+            self.controller.set_current_user(user_data)
             self.controller.show_page("MainMenu")
 
         else:

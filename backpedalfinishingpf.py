@@ -2,11 +2,13 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, create_frame
+from thememanager import theme_manager
 
 class BackPedalFinishingPF(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg = BG_COLOUR)
         self.controller = controller
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Initialise variables for stat tracking
         self.makes = 0
@@ -146,6 +148,13 @@ class BackPedalFinishingPF(tk.Frame):
         )
         resetButton.pack(side = "left", pady=10)
 
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])
+
+
     def record_make(self):
         #Reording a made shot
         if self.makes + self.misses >= self.total_shots:
@@ -188,6 +197,11 @@ class BackPedalFinishingPF(tk.Frame):
         
         message = f"Drill Complete!\n\nFinal Score: {self.makes}/{self.total_shots}\nShooting Percentage: {percentage: .1f}%"
         messagebox.showinfo("Drill Complete", message)
+
+        from database import save_drill_score
+        user = self.controller.get_current_user()
+        if user:
+            save_drill_score(user["id"], self.__class__.__name__, self.makes, self.total_shots)
 
         self.makeButton.config(state="disabled")
         self.missButton.config(state="disabled")

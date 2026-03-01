@@ -8,6 +8,7 @@ from authenticator import(
     validateUsername, validatePassword, hashPassword
 )
 from database import add_user
+from thememanager import theme_manager
 
 class RegisterPage(tk.Frame):
     #Page for users to create their account
@@ -15,6 +16,7 @@ class RegisterPage(tk.Frame):
         super().__init__(parent, bg = "#000000")
         self.controller = controller
         self.message_label = None
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Container
         main_frame = create_frame(self)
@@ -84,6 +86,12 @@ class RegisterPage(tk.Frame):
             width = 20
         )
         loginButton.pack(pady = 10)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])
  
     def register(self):
         #Handling the clicking of the registration button

@@ -2,6 +2,7 @@ import tkinter as tk
 from colourscheme import(ButtonStyle, StyledLabel, StyledEntry, create_frame, show_message)
 from authenticator import(verifySecurityAnswer, validatePassword, hashPassword)
 from database import get_user, updatePassword
+from thememanager import theme_manager
 
 class ForgotPasswordPage(tk.Frame):
     #Page where the user can recover their account by resetting their password
@@ -10,6 +11,7 @@ class ForgotPasswordPage(tk.Frame):
         self.controller = controller
         self.message_label = None
         self.securityQuestionText = None
+        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
 
         #Container
         main_frame = create_frame(self)
@@ -94,6 +96,12 @@ class ForgotPasswordPage(tk.Frame):
             width = 20
         )
         backButton.pack(pady = 10)
+
+        theme_manager.register(self.apply_theme)
+
+    def apply_theme(self):
+        c = theme_manager.colours
+        self.configure(bg=c["bg"])
 
     def loadSecurityQuestion(self):
         #Load display and user's security question
