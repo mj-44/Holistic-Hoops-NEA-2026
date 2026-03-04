@@ -4,9 +4,9 @@ from thememanager import theme_manager
 
 class SettingsMenu(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg=BG_COLOUR)
+        super().__init__(parent, background=BG_COLOUR)
         self.controller = controller
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
         #Container frame to centralise content
         self.main_frame = create_frame(self)
@@ -71,11 +71,11 @@ class SettingsMenu(tk.Frame):
     def apply_theme(self):
         #Called by ThemeManager when theme changes - update all widget colours
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
-        self.main_frame.configure(bg=c["bg"])
-        self.title.configure(bg=c["bg"], fg=c["text"])
+        self.configure(background=c["background"])
+        self.main_frame.configure(background=c["background"])
+        self.title.configure(background=c["background"], foreground=c["text"])
         self.themeButton.configure(
             text=self._theme_button_text(),
-            bg=c["accent"],
-            fg=c["text"]
+            background=c["accent"],
+            foreground=c["text"]
         )

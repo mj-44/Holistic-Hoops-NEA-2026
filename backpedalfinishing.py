@@ -6,9 +6,9 @@ from thememanager import theme_manager
 
 class BackPedalFinishing(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg = BG_COLOUR)
+        super().__init__(parent, background = BG_COLOUR)
         self.controller = controller
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
         #Initialise variables for stat tracking
         self.makes = 0
@@ -48,7 +48,7 @@ class BackPedalFinishing(tk.Frame):
         self.drillPhoto = ImageTk.PhotoImage(drillImage)
 
         #Display the image
-        imageLabel = tk.Label(main_frame, image=self.drillPhoto, bg=BG_COLOUR)
+        imageLabel = tk.Label(main_frame, image=self.drillPhoto, background=BG_COLOUR)
         imageLabel.pack(pady=(0,20))
 
         #Displaying the instructions for the drill
@@ -152,7 +152,7 @@ class BackPedalFinishing(tk.Frame):
 
     def apply_theme(self):
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
+        self.configure(background=c["background"])
 
     def record_make(self):
         #Reording a made shot

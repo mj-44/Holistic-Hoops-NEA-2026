@@ -38,12 +38,12 @@ class BasketballApp:
         self.root.geometry("720x1280")
         self.root.resizable(False, False)
         
-        self.root.configure(bg = "#000000")
+        self.root.configure(background = "#000000")
 
         initialise_database()
 
         #Create a container to hold all pages and stack them
-        self.container = tk.Frame(self.root, bg = "#000000")
+        self.container = tk.Frame(self.root, background = "#000000")
         self.container.pack(fill = "both", expand = True)
 
         #create dictionary to store pages

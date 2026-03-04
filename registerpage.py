@@ -13,10 +13,10 @@ from thememanager import theme_manager
 class RegisterPage(tk.Frame):
     #Page for users to create their account
     def __init__(self, parent, controller):
-        super().__init__(parent, bg = "#000000")
+        super().__init__(parent, background = "#000000")
         self.controller = controller
         self.message_label = None
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
         #Container
         main_frame = create_frame(self)
@@ -91,7 +91,7 @@ class RegisterPage(tk.Frame):
 
     def apply_theme(self):
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
+        self.configure(background=c["background"])
  
     def register(self):
         #Handling the clicking of the registration button

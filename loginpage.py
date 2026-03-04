@@ -10,10 +10,10 @@ from thememanager import theme_manager
 class LoginPage(tk.Frame):
     #code for the login page so the user can enter credentials
     def __init__(self, parent, controller):
-        super().__init__(parent, bg="#000000")
+        super().__init__(parent, background="#000000")
         self.controller = controller
         self.message_label = None #stores the result of the verification
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
         
         #container
         self.main_frame = create_frame(self)
@@ -71,7 +71,7 @@ class LoginPage(tk.Frame):
 
     def apply_theme(self):
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
+        self.configure(background=c["background"])
 
     def login(self):
         #Handle login button click

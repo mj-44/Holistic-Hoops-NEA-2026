@@ -37,21 +37,21 @@ DRILL_DISPLAY_NAMES = {
 
 class ComparisonMenu(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg=BG_COLOUR)
+        super().__init__(parent, background=BG_COLOUR)
         self.controller = controller
         self.current_user = None      #set by controller after login
         self.message_label = None
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
         #Scrollable canvas setup so the comparison table fits on screen
-        canvas = tk.Canvas(self, bg=BG_COLOUR, highlightthickness=0)
+        canvas = tk.Canvas(self, background=BG_COLOUR, highlightthickness=0)
         scrollbar = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
         canvas.pack(side="left", fill="both", expand=True)
 
         #Inner frame inside the canvas
-        self.inner = tk.Frame(canvas, bg=BG_COLOUR)
+        self.inner = tk.Frame(canvas, background=BG_COLOUR)
         self.inner_window = canvas.create_window((360, 0), window=self.inner, anchor="n")
 
         self.inner.bind("<Configure>", lambda e: canvas.configure(
@@ -97,7 +97,7 @@ class ComparisonMenu(tk.Frame):
         self.them_header.grid(row=0, column=2)
 
         #Divider
-        tk.Frame(self.inner, bg=ACCENT_COLOUR, height=2).pack(fill="x", padx=20, pady=5)
+        tk.Frame(self.inner, background=ACCENT_COLOUR, height=2).pack(fill="x", padx=20, pady=5)
 
         #Drill rows container
         self.rows_frame = create_frame(self.inner)
@@ -106,8 +106,8 @@ class ComparisonMenu(tk.Frame):
         #Build one row per drill (initially blank)
         self.row_widgets = {}
         for i, drill in enumerate(ALL_DRILLS):
-            row_bg = BG_COLOUR if i % 2 == 0 else "#0d0d0d"
-            row = tk.Frame(self.rows_frame, bg=row_bg)
+            row_background = BG_COLOUR if i % 2 == 0 else "#0d0d0d"
+            row = tk.Frame(self.rows_frame, background=row_background)
             row.pack(fill="x", pady=1)
             row.columnconfigure(0, weight=2)
             row.columnconfigure(1, weight=1)
@@ -115,28 +115,28 @@ class ComparisonMenu(tk.Frame):
 
             name_label = tk.Label(
                 row, text=DRILL_DISPLAY_NAMES[drill],
-                bg=row_bg, fg=TEXT_COLOUR,
+                background=row_background, foreground=TEXT_COLOUR,
                 font=("Coda", 11), anchor="w"
             )
             name_label.grid(row=0, column=0, sticky="w", padx=5, pady=6)
 
             you_label = tk.Label(
                 row, text="-",
-                bg=row_bg, fg=TEXT_COLOUR,
+                background=row_background, foreground=TEXT_COLOUR,
                 font=("Coda", 11)
             )
             you_label.grid(row=0, column=1, pady=6)
 
             them_label = tk.Label(
                 row, text="-",
-                bg=row_bg, fg=TEXT_COLOUR,
+                background=row_background, foreground=TEXT_COLOUR,
                 font=("Coda", 11)
             )
             them_label.grid(row=0, column=2, pady=6)
 
-            self.row_widgets[drill] = (you_label, them_label, row_bg)
+            self.row_widgets[drill] = (you_label, them_label, row_background)
 
-        #--- Back button ---
+        #Back button
         ButtonStyle(
             self.inner,
             text="← Back to Main Menu",
@@ -148,7 +148,7 @@ class ComparisonMenu(tk.Frame):
 
     def apply_theme(self):
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
+        self.configure(background=c["background"])
 
     def set_current_user(self, username):
         #Called by the controller after login so the page knows who is logged in
@@ -197,7 +197,7 @@ class ComparisonMenu(tk.Frame):
     def _redraw_rows(self, my_scores, opponent_scores):
         #Update every drill row with scores and apply colour coding
         for drill in ALL_DRILLS:
-            you_label, them_label, row_bg = self.row_widgets[drill]
+            you_label, them_label, row_background = self.row_widgets[drill]
 
             my_data = my_scores.get(drill)
             opp_data = opponent_scores.get(drill)
@@ -221,8 +221,8 @@ class ComparisonMenu(tk.Frame):
                 my_colour = TEXT_COLOUR
                 opp_colour = TEXT_COLOUR
 
-            you_label.config(text=my_text, fg=my_colour)
-            them_label.config(text=opp_text, fg=opp_colour)
+            you_label.config(text=my_text, foreground=my_colour)
+            them_label.config(text=opp_text, foreground=opp_colour)
 
     def tkraise(self, aboveThis=None):
         super().tkraise(aboveThis)

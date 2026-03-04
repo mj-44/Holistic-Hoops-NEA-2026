@@ -4,9 +4,9 @@ from thememanager import theme_manager
 
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg = BG_COLOUR)
+        super().__init__(parent, background = BG_COLOUR)
         self.controller = controller
-        theme_manager.register(lambda: self.configure(bg=theme_manager.colours["bg"]))
+        theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
         #Contrainer frame to centralise content
         main_frame = create_frame(self)
@@ -62,4 +62,4 @@ class MainMenu(tk.Frame):
 
     def apply_theme(self):
         c = theme_manager.colours
-        self.configure(bg=c["bg"])
+        self.configure(background=c["background"])

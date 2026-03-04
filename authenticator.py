@@ -7,19 +7,25 @@ def hashPassword(password):
 def validateUsername(username):
     if not username:
         return False, "Username cannot be empty"
+    
     if len(username)<3:
         return False, "Username must be at least 3 characters"
+    
     if len(username)>20:
         return False, "Username must be less than 20 characters"
+    
     if not username.isalnum():
         return False, "Username must only contain letters and numbers"
+    
     return True, ""
 
 def validatePassword(password):
     if not password:
         return False, "Password cannot be empty"
+    
     if len(password) < 8:
         return False, "Password must be at least 8 characters"
+    
     return True, ""
 
 def verifyLogin(username, password):

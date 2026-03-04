@@ -3,11 +3,11 @@
 
 #Default dark mode colours (original scheme)
 DARK_THEME = {
-    "bg": "#000000",
+    "background": "#000000",
     "accent": "#D4A017",
     "text": "#FFFFFF",
     "hover": "#FFA500",
-    "entry_bg": "#1a1a1a",
+    "entry_background": "#1a1a1a",
     "entry_border": "#333333",
     "subtext": "#666666",
     "error": "#FF4444",
@@ -16,11 +16,11 @@ DARK_THEME = {
 
 #Light mode colours
 LIGHT_THEME = {
-    "bg": "#FFFFFF",
+    "background": "#FFFFFF",
     "accent": "#82C8E5",
     "text": "#272757",
     "hover": "#5757a7",
-    "entry_bg": "#FFFFFF",
+    "entry_background": "#FFFFFF",
     "entry_border": "#CCCCCC",
     "subtext": "#888888",
     "error": "#CC0000",
