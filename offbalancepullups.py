@@ -150,8 +150,8 @@ class OffBalancePullUps(tk.Frame):
         theme_manager.register(self.apply_theme)
 
     def apply_theme(self):
-        c = theme_manager.colours
-        self.configure(background=c["background"])
+        colour = theme_manager.colours
+        self.configure(background=colour["background"])
 
     def record_make(self):
         #Reording a made shot
