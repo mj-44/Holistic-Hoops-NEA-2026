@@ -1,7 +1,7 @@
-#thememanager.py
-#Central theme manager - holds current colour scheme and notifies registered pages on change
+#Created a page to centralise the management of the theme the user has chosen for the application and updates the page
+#with theme almost simulataneously
 
-#Default dark mode colours (original scheme)
+#Constant for the colours used when in dark mode (original scheme)
 DARK_THEME = {
     "background": "#000000",
     "accent": "#D4A017",
@@ -14,7 +14,7 @@ DARK_THEME = {
     "success": "#44FF44",
 }
 
-#Light mode colours
+#Colours used when the application is in light mode
 LIGHT_THEME = {
     "background": "#FFFFFF",
     "accent": "#82C8E5",
@@ -27,27 +27,36 @@ LIGHT_THEME = {
     "success": "#007700",
 }
 
+#Creating the class for the theme manager
 class ThemeManager:
     def __init__(self):
         self._dark_mode = True
-        self._listeners = []  #list of callbacks to call when theme changes
+        self._listeners = []  #Creating a list to the callbacks to call when theme changes
 
+    #Sets the theme to the mode the user has chosen to use on the application
     @property
     def colours(self):
-        return DARK_THEME if self._dark_mode else LIGHT_THEME
-
+        if self._dark_mode:
+            return DARK_THEME
+        else:
+            return LIGHT_THEME
+        
+    #A getter which finds out if the page is in dark mode or not
     @property
     def is_dark(self):
         return self._dark_mode
 
+    #A toggle which enables the user to switch between light and dark mode
     def toggle(self):
         self._dark_mode = not self._dark_mode
         self._notify_listeners()
 
+    #Other parts of the app can respond to this theme change in accordance with what the theme they have chosen is
     def register(self, callback):
         #Register a function to be called when the theme changes
         self._listeners.append(callback)
 
+    #Calls all callbacks during a theme change
     def _notify_listeners(self):
         for callback in self._listeners:
             try:
