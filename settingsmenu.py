@@ -70,12 +70,12 @@ class SettingsMenu(tk.Frame):
 
     def apply_theme(self):
         #Called by ThemeManager when theme changes - update all widget colours
-        c = theme_manager.colours
-        self.configure(background=c["background"])
-        self.main_frame.configure(background=c["background"])
-        self.title.configure(background=c["background"], foreground=c["text"])
+        colour = theme_manager.colours
+        self.configure(background=colour["background"])
+        self.main_frame.configure(background=colour["background"])
+        self.title.configure(background=colour["background"], foreground=colour["text"])
         self.themeButton.configure(
             text=self._theme_button_text(),
-            background=c["accent"],
-            foreground=c["text"]
+            background=colour["accent"],
+            foreground=colour["text"]
         )
