@@ -1,4 +1,3 @@
-#File handling databases and creating tables
 import sqlite3
 import os
 
@@ -12,7 +11,7 @@ def initialise_database():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        #Create user table with its fields
+        #Create the user table in the database with its related fields
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +22,7 @@ def initialise_database():
             )
         """)
 
-        #Create drill scores table - stores every attempt for every drill
+        #Create drill scores table and stores every attempt for every drill
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS drill_scores(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +36,7 @@ def initialise_database():
             )
         """)
 
-        #Create high scores table - one row per user per drill, updated when beaten
+        #Create high scores table and stores only the high score for the user and updates when needed
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS high_scores(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +70,7 @@ def add_user(username, password, security_question, security_answer):
         return False
     
 def get_user(username):
-    #Retrieves user from database depending on the username
+    #Retrieves user data from the database depending on the user that needs to be searched for
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -109,13 +108,13 @@ def save_drill_score(user_id, drill_name, makes, total_shots):
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        #Always insert into drill_scores (full history)
+        #Insert the drill score into the drill scores table
         cursor.execute("""
             INSERT INTO drill_scores (user_id, drill_name, makes, total_shots, percentage)
             VALUES (?, ?, ?, ?, ?)
         """, (user_id, drill_name, makes, total_shots, percentage))
 
-        #Check if a high score already exists for this user + drill
+        #Check if a high score already exists for a user on the certain drill
         cursor.execute("""
             SELECT makes FROM high_scores
             WHERE user_id = ? AND drill_name = ?
@@ -158,14 +157,14 @@ def get_user_high_scores(user_id):
     }
 
 def get_high_scores_by_username(username):
-    #Returns high scores for a user looked up by username (used for comparison page)
+    #Returns high scores for a user looked up by username
     user = get_user(username)
     if not user:
         return None
     return get_user_high_scores(user["id"])
 
 def get_all_drill_scores(user_id):
-    #Returns the full score history for a given user
+    #Returns the full score history for a given user if needed
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("""
