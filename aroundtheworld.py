@@ -4,22 +4,23 @@ from PIL import Image, ImageTk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, create_frame
 from thememanager import theme_manager
 
+#Creating.a class for the around the world drill
 class AroundTheWorld(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, background = BG_COLOUR)
         self.controller = controller
         theme_manager.register(lambda: self.configure(background=theme_manager.colours["background"]))
 
-        #Initialise variables for stat tracking
+        #Initialise variables so that the users makes and misses can be tracked and later used for their score
         self.makes = 0
         self.misses = 0
         self.total_shots = 50
 
-        #Container frame to centralise content
+        #Making a container frame to centralise the content of the page
         main_frame = create_frame(self)
         main_frame.place(relx = 0.5, rely = 0.5, anchor = "center")
 
-        #Creating the title for the Around The World drill
+        #Making a title for the page to make it clear what drill they are doing
         title = StyledLabel(
             main_frame,
             text = "Around The World Drill",
@@ -28,7 +29,7 @@ class AroundTheWorld(tk.Frame):
         )
         title.pack(pady=(0,20))
 
-        #Subtitle for instructions
+        #Using a subtitle to give a brief description of the general task they are doing
         subtitle = StyledLabel(
             main_frame,
             text = "Drill Focused on 3s around the perimeter!",
@@ -37,16 +38,16 @@ class AroundTheWorld(tk.Frame):
         )
         subtitle.pack(pady=(0,20))
 
-        #Load and display drill image
+        #Loading a pre made image which gives a brief illustration of how to perform the drill.
         drillImage = Image.open("assets/around_the_world_drill.png")
 
-        #Resize the image to fit within the app window while maintaining aspect ratio
+        #Resizing the image to fit within the app window while maintaining the overall aspect ratio of the app
         drillImage = drillImage.resize((500, 300), Image.Resampling.LANCZOS)
 
-        #Convert the image to a format Tkinter can use
+        #Convert the image into a format that can be used by Tkinter can use
         self.drillPhoto = ImageTk.PhotoImage(drillImage)
 
-        #Display the image
+        #Displaying the image on the screen for the user to see
         imageLabel = tk.Label(main_frame, image=self.drillPhoto, background=BG_COLOUR)
         imageLabel.pack(pady=(0,20))
 
@@ -59,7 +60,7 @@ class AroundTheWorld(tk.Frame):
         )
         instructionsLabel.pack(pady=(20,10))
 
-        #Give the instructions step by step
+        #Storing the steps for the drill in an array so that they can be used to be listed as instructions on the menu
         steps = [
             "1. Start at the corner and take a 10 3-point shots",
             "2. Move to the next spot along the perimeter after attempting 10 shots",
@@ -67,6 +68,7 @@ class AroundTheWorld(tk.Frame):
             "4. Get a score out of 50 (10 shots from each spot)",
         ]
 
+        #Iterating through the steps in the array and creating a label for each one where the text in the label
         for step in steps:
             stepLabel = StyledLabel(
                 main_frame,
@@ -76,11 +78,11 @@ class AroundTheWorld(tk.Frame):
             )
             stepLabel.pack(pady=5, padx=40, anchor="w")
 
-        #Creating the section to actively display the score
+        #Creating the section by using a frame to actively display the score as the user plays the drill
         scoreFrame = create_frame(main_frame)
         scoreFrame.pack(pady=(30))
 
-        #Current Score Display
+        #Displaying the users current score onto the screen as a ratio of their makes against their total shots
         self.scoreLabel = StyledLabel(
             scoreFrame,
             text = f"Score: {self.makes}/{self.makes + self.misses}",
@@ -89,7 +91,7 @@ class AroundTheWorld(tk.Frame):
         )
         self.scoreLabel.pack(pady=10)
 
-        #Progress Display
+        #Displaying the users amount of total shots taken
         self.progressLabel = StyledLabel(
             scoreFrame,
             text = f"Shots Taken: {self.makes + self.misses}/{self.total_shots}",
@@ -98,7 +100,7 @@ class AroundTheWorld(tk.Frame):
         )
         self.progressLabel.pack(pady=5)
 
-        #Shooting Percentage Display
+        #Displaying the users shooting percentage which should automatically update every shot
         self.percentageLabel = StyledLabel(
             scoreFrame,
             text = f"Shooting Percentage: 0.0%",
@@ -149,8 +151,8 @@ class AroundTheWorld(tk.Frame):
         theme_manager.register(self.apply_theme)
 
     def apply_theme(self):
-            c = theme_manager.colours
-            self.configure(background=c["background"])
+            colour = theme_manager.colours
+            self.configure(background=colour["background"])
 
     def record_make(self):
         #Reording a made shot
