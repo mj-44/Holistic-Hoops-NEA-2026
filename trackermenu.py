@@ -216,8 +216,8 @@ class TrackerMenu(tk.Frame):
 
     #Automatically applying the theme that the user has enabled (light or dark mode) onto the page
     def apply_theme(self):
-        c = theme_manager.colours
-        self.configure(background=c["background"])
+        colour = theme_manager.colours
+        self.configure(background=colour["background"])
 
     #Identifying the user they are showing the high scores of which should be the person who is logged into the account
     def set_current_user(self, username):
