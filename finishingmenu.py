@@ -2,6 +2,7 @@ import tkinter as tk
 from colourscheme import ButtonStyle, StyledLabel, BG_COLOUR, ACCENT_COLOUR, TEXT_COLOUR, HOVER_COLOUR, create_frame
 from thememanager import theme_manager
 
+#Creating the class for the finishing menu
 class FinishingMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, background = BG_COLOUR)
@@ -22,7 +23,7 @@ class FinishingMenu(tk.Frame):
         )
         title.pack(pady=(0,50))
 
-        #Button to Alley Drill page
+        #Button redirecting the user to the respective page of the drill they wish to complete
         alley_drill_button = ButtonStyle(
             main_frame,
             text = "Alley Drill",
@@ -31,7 +32,6 @@ class FinishingMenu(tk.Frame):
         )
         alley_drill_button.pack(pady=10)
 
-        #Button to Cone Touch Finishing Drill page
         cone_touch_finishing_button = ButtonStyle(
             main_frame,
             text = "Cone Touch Finishing",
@@ -40,7 +40,6 @@ class FinishingMenu(tk.Frame):
         )
         cone_touch_finishing_button.pack(pady=10)
 
-        #Button to Fresno Attack Drill page
         fresno_attack_button = ButtonStyle(
             main_frame,
             text = "Fresno Attack",
@@ -49,7 +48,7 @@ class FinishingMenu(tk.Frame):
         )
         fresno_attack_button.pack(pady=10)
         
-        #Button to return to the training menu when needed
+        #Button allowing the user to return to the training menu when they are done with using this menu
         backButton = ButtonStyle(
             main_frame,
             text = "Back to Training Menu",
@@ -60,6 +59,7 @@ class FinishingMenu(tk.Frame):
 
         theme_manager.register(self.apply_theme)
 
+    #Automatically applies the theme that the user has selected to the current page being used.
     def apply_theme(self):
-        c = theme_manager.colours
-        self.configure(background=c["background"])
+        colour = theme_manager.colours
+        self.configure(background=colour["background"])
